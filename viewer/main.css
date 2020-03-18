@@ -1,0 +1,216 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+html, body, #application{
+	height: 100%;
+	overflow: hidden;
+	font-size: 1.0rem;
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.select-document {
+  width: auto;
+  padding: 5px 50px 5px 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  color: blue;
+  height: 34px;
+  min-width: 200px;
+  max-width: 90%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: white url("data:image/svg+xml;utf8,<svg viewBox='0 0 140 140' width='24' height='24' xmlns='http://www.w3.org/2000/svg'><g><path d='m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z' fill='black'/></g></svg>") 30px no-repeat;
+  background-position: right 5px top 50%;
+}
+
+.select-document::-ms-expand {
+    display: none; /* Remove default arrow in Internet Explorer 10 and 11 */
+}
+
+/* Target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width:0\0) {
+    .select-document {
+        background: none\9;
+        padding: 5px\9;
+    }
+}
+
+.wrapper {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.header {
+	height: 100px;
+	background: red;
+	box-sizing: border-box;
+	border-bottom: 1px solid #c0c0c0;
+}
+
+.header-menu {
+	height: 39px;
+	padding: 0px 10px;
+	box-sizing: border-box;
+	border-top: 2px solid #d0d0d0;
+	border-bottom: 2px solid #d0d0d0;
+	background-color: white;
+}
+
+.header-title {
+	height: 60px;
+	box-sizing: border-box;
+	padding: 5px 15px;
+	background-color: white;
+	border-bottom: 1px solid #c0c0c0;
+}
+
+.header-title-heading {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	line-height: 1.3rem;
+	font-weight: normal;
+	color: #606060;
+}
+
+.header-title-subheading {
+	font-size: 1.2rem;
+	line-height: 1.8rem;
+	font-weight: 1000;
+}
+
+.header-logo {
+	position: fixed;
+	top: 0;
+	right: 0;
+	height: 60px;
+	width: 500px;
+	text-align: right;
+	line-height: 58px;
+}
+
+.header-logo-image {
+	pointer-events: none;
+	height: 50px;
+	margin: 5px;
+}
+
+.content {
+	position: fixed;
+	top: 100px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgb(250, 250, 250);
+	overflow: auto;
+}
+
+.anchor-link {
+	visibility: hidden;
+	padding: 0 20px;
+}
+
+.anchor-link:hover {
+	visibility: visible;
+}
+
+.content-container{
+	width: 100%;
+	height: 100%;
+
+	padding: 1rem;
+	font-size: 0.8rem;
+	max-width: 1100px;
+	margin: 0 auto;
+	
+	border-sixing: border-box;
+}
+
+.content-container h1,
+.content-container h2,
+.content-container h3,
+.content-container h4,
+.content-container h5,
+.content-container h6 {
+	margin: 2rem 0;
+}
+
+.content-container h1 {
+	font-size: 2rem;
+}
+
+.content-container h2 {
+	font-size: 1.5rem;
+}
+
+.content-container h3 {
+	font-size: 1.2rem;
+}
+
+.content-container p {
+	margin: 1rem 0;
+}
+
+.content-container th,
+.content-container td {
+	padding: 0.2rem 0.5rem;
+}
+
+.content-container ul,
+.content-container ol {
+	margin-left: 1rem;
+}
+
+@media only screen and (max-width: 800px) {
+	.content-container{
+		width: 100%;
+		height: 100%;
+
+		padding: 1rem;
+		box-sizing: border-box;
+		font-size: 0.8rem;
+	}
+
+	.content-container h1,
+	.content-container h2,
+	.content-container h3,
+	.content-container h4,
+	.content-container h5,
+	.content-container h6 {
+		margin: 0.8rem 0;
+	}
+	
+	.content-container h1 {
+		font-size: 1.4rem;
+	}
+
+	.content-container h2 {
+		font-size: 1.2rem;
+	}
+
+	.content-container h3 {
+		font-size: 1.0rem;
+	}
+	
+	img {
+		max-width: 100%;
+	}
+	
+	.output_text,
+	.output_execute_result {
+		max-width: 100%;
+		overflow-x: auto;
+		white-space: pre-wrap;
+		white-space: -moz-pre-wrap;
+		white-space: -pre-wrap;
+		white-space: -o-pre-wrap;
+		word-wrap: break-word;
+	}
+}

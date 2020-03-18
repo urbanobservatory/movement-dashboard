@@ -1,0 +1,14 @@
+[
+  {
+    "id": "pedestrian-flows",
+    "title": "Newcastle upon Tyne: Pedestrian flows in city centre",
+    "path": "/output/plot-pedestrian-flows.html",
+    "type": "html"
+  },
+  {
+    "id": "car-parks",
+    "title": "Tyne and Wear: Car park occupancy across the region",
+    "path": "/output/car-park-occupancy.html",
+    "type": "html"
+  }
+]
