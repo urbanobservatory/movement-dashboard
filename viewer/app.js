@@ -16,14 +16,14 @@ window.addEventListener('load', function () {
 	loadDocumentById(selectedOption.id);
   });
   
-  setInterval(
+  /* setInterval(
     function () {
 	  if (activeDocumentId) {
 	    loadDocumentById(activeDocumentId);	
 	  }
 	},
 	60 * 1000
-  );
+  ); */
 });
 
 function loadOptions() {

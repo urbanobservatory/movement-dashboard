@@ -8,7 +8,7 @@
   {
     "id": "car-parks",
     "title": "Tyne and Wear: Car park occupancy across the region",
-    "path": "/output/car-park-occupancy.html",
+    "path": "/output/plot-car-park-occupancy.html",
     "type": "html"
   }
 ]
