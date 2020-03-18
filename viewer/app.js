@@ -27,6 +27,7 @@ window.addEventListener('load', function () {
 });
 
 function loadOptions() {
+  loadingSpinner();
   fetch('documents.json')
     .then(
 	  function (response) {
@@ -73,7 +74,12 @@ function loadDocumentById(id) {
   documentSelector.selectedIndex = documentIndex;
 }
 
+function loadingSpinner() {
+	contentArea.innerHTML = '<div class="spinner"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>';
+}
+
 function loadDocument(path, type) {
+  loadingSpinner();
   fetch(path)
     .then(
 	  function (response) {
