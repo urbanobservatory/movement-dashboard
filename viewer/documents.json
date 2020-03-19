@@ -1,14 +1,32 @@
 [
   {
-    "id": "pedestrian-flows",
-    "title": "Newcastle upon Tyne: Pedestrian flows in city centre",
-    "path": "/output/plot-pedestrian-flows.html",
+    "id": "pedestrian-flows-summary",
+    "title": "Newcastle upon Tyne: Pedestrian flows: Summary",
+    "path": "/output/plot-ncl-summary-of-pedestrian-flows.html",
     "type": "html"
   },
   {
-    "id": "car-parks",
-    "title": "Tyne and Wear: Car park occupancy across the region",
-    "path": "/output/plot-car-park-occupancy.html",
+    "id": "pedestrian-flows-each",
+    "title": "Newcastle upon Tyne: Pedestrian flows: Each during last 28 days",
+    "path": "/output/plot-ncl-pedestrian-flows-28-days.html",
+    "type": "html"
+  },
+  {
+    "id": "pedestrian-flows-comparison",
+    "title": "Newcastle upon Tyne: Pedestrian flows: Comparison to typical profiles",
+    "path": "/output/plot-ncl-comparison-to-typical-pedestrian-flows.html",
+    "type": "html"
+  },
+  {
+    "id": "car-parks-6mo",
+    "title": "Tyne and Wear: Car parks: Vehicle-hours during last six months",
+    "path": "/output/plot-car-park-occupancy-6-months.html",
+    "type": "html"
+  },
+  {
+    "id": "car-parks-6wk",
+    "title": "Tyne and Wear: Car parks: Occupancy during last six months",
+    "path": "/output/plot-car-park-occupancy-6-weeks.html",
     "type": "html"
   }
 ]
