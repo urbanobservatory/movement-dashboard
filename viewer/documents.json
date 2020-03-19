@@ -31,7 +31,7 @@
   },
   {
     "id": "car-parks-6wk",
-    "title": "Car parks: Occupancy during last six months (Tyne and Wear)",
+    "title": "Car parks: Occupancy during last six weeks (Tyne and Wear)",
     "path": "/output/plot-car-park-occupancy-6-weeks.html",
     "type": "html"
   }
