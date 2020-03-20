@@ -34,5 +34,11 @@
     "title": "Car parks: Occupancy during last six weeks (Tyne and Wear)",
     "path": "/output/plot-car-park-occupancy-6-weeks.html",
     "type": "html"
+  },
+  {
+    "id": "traffic-3wk",
+    "title": "Traffic: Vehicle counts during last three weeks (Tyne and Wear)",
+    "path": "/output/plot-traffic-volumes-3-weeks.html",
+    "type": "html"
   }
 ]
