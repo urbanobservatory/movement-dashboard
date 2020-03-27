@@ -46,5 +46,11 @@
     "title": "Traffic: Vehicle counts during last three weeks (Tyne and Wear)",
     "path": "/output/plot-traffic-volumes-3-weeks.html",
     "type": "html"
+  },
+  {
+    "id": "air-quality",
+    "title": "Air quality: Week-by-week comparison from March 2020 (Newcastle upon Tyne, Gateshead, and North Tyneside)",
+    "path": "/output/plot-airquality-agg-hourday.html",
+    "type": "html"
   }
 ]
