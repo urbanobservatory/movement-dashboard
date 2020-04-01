@@ -25,7 +25,7 @@ def sensor_location(bar_chart,sensor_name,pretty_name):
     )
 
     if not os.path.exists(map_img_path):
-        fig, ax2 = plt.subplots(figsize=(2, 2), dpi=300)
+        fig, ax2 = plt.subplots(figsize=(500/300, 500/300), dpi=300)
         geojson = json.load(open('{geojson_folder}/{sensor_name}.json'.format(
             sensor_name=sensor_name,
             geojson_folder=bar_chart.geojson_folder,
@@ -103,8 +103,8 @@ def plot_data(bar_chart,rename_function):
             bars[week] = list(day_values.values())
         # set width of bar
         barWidth = 0.2
-
-        fig, ax1 = plt.subplots(figsize=(20, 20), dpi=300)
+        my_dpi = 300
+        fig, ax1 = plt.subplots(figsize=(1600/my_dpi, 1600/my_dpi), dpi=my_dpi)
         for i, (week_num, sub_bars) in enumerate(bars.items()):
             for j, stack in enumerate(sub_bars):
                 if stack == None:
@@ -154,10 +154,10 @@ def plot_data(bar_chart,rename_function):
             legend_items.append(
                 mpatches.Patch(facecolor='white', edgecolor='black', hatch=PATTERNS[i], linewidth=1, label=label))
 
-        ax1.legend(handles=legend_items)
+        ax1.legend(handles=legend_items,prop={'size': 6})
 
         fig.tight_layout()
-        fig.suptitle(pretty_name, fontsize=20)
+       
         fig_path = '{data_folder}/{sensor_name}.png'.format(
             sensor_name=db_name,
             data_folder=bar_chart.plots_folder

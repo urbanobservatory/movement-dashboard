@@ -24,6 +24,12 @@
     "type": "html"
   },
   {
+    "id": "pedestrian-flows-bars",
+    "title": "Pedestrian flows: Day of the week comparison",
+    "path": "/output/plot-people-count-bar-charts.html",
+    "type": "html"
+  },
+  {
     "id": "car-parks-6mo",
     "title": "Car parks: Vehicle-hours during last six months (Tyne and Wear)",
     "path": "/output/plot-car-park-occupancy-6-months.html",
@@ -45,6 +51,13 @@
     "id": "traffic-3wk",
     "title": "Traffic: Vehicle counts during last three weeks (Tyne and Wear)",
     "path": "/output/plot-traffic-volumes-3-weeks.html",
+    "type": "html"
+  },
+
+  {
+    "id": "traffic-bars",
+    "title": "Traffic: Vehicle counts day of the week comparison",
+    "path": "/output/plot-vehicle-count-bar-charts.html",
     "type": "html"
   }
 ]
