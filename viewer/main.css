@@ -191,6 +191,10 @@ pre {
 	margin-bottom: 2em;
 }
 
+.coverage-national {
+	color: red;
+}
+
 @media only screen and (max-width: 800px) {
 	.content-container{
 		width: 100%;

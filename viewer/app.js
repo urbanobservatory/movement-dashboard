@@ -43,6 +43,9 @@ function loadOptions() {
         }
 		for (var i = 0; i < documents.length; i++) {
           var newOption = document.createElement('option');
+		  if (documents[i].coverage === 'national') {
+			  newOption.className = 'coverage-national';
+		  }
           newOption.innerText = documents[i].title;
           newOption.id = documents[i].id;
           documentSelector.appendChild(newOption);
@@ -64,7 +67,9 @@ function loadDocumentById(id) {
 	}
   );
   var document = documentList[documentIndex];
-  if (!document) return;
+  if (!document) {
+	  document = documentList[0];
+  }
   
   activeDocumentId = id;
   window.location = '#' + id;

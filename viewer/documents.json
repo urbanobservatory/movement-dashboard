@@ -6,6 +6,13 @@
     "type": "html"
   },
   {
+    "id": "traffic-national",
+    "title": "UK Traffic: Summary (Tyne and Wear, Hull and Sheffield)",
+    "path": "/output/plot-summary-of-traffic-volumes-no10.html",
+    "type": "html",
+    "coverage": "national"
+  },
+  {
     "id": "pedestrian-flows-summary",
     "title": "Pedestrian flows: Summary (Newcastle upon Tyne)",
     "path": "/output/plot-ncl-summary-of-pedestrian-flows.html",
