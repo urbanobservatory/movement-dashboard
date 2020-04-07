@@ -4,7 +4,7 @@ import datetime
 import json
 import io
 import pandas as pd
-from .plot_data import plot_data
+from .plot_data import plot_data, plot_data_group
 class BarChart:
 
     def __init__(self,name):
@@ -13,8 +13,11 @@ class BarChart:
         self.__make_folders()
 
 
-    def plot_data(self,renamer):
-        return plot_data(self,renamer)
+    def plot_data(self,renamer,y_axis):
+        return plot_data(self,renamer,y_axis)
+
+    def plot_data_group(self, group, y_axis,last_monday=None):
+        return plot_data_group(self,group,y_axis,last_monday)
 
     def __make_folders(self):
         self.data_folder = '../cache/bar-charts/{folder_name}-data/'.format(folder_name=self.name)
