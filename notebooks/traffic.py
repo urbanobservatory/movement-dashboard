@@ -88,7 +88,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullL
     for ts in reversed(sorted(list(pdTrafficRecentRelativePc.columns))):
         dfTs = pdTrafficRecentRelativePc[ts]
         dfTs.index = dfTs.index.map(lambda d: datetime.datetime.combine(d, datetime.time.min).replace(tzinfo=tzLocal))
-        dfTs = dfTs[(dfTs < 160) & (dfTs > 10)] # Sanity limits :-)
+        dfTs = dfTs[((dfTs < 160) & (dfTs > 10)) | (dfTs.isnull())] # Sanity limits :-)
 
         if ts in tsAdditionalDetail.keys():
             seriesColour = next(annotationColours)
