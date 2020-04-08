@@ -122,7 +122,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullL
                     xycoords='data',
                     xytext=(arrowDay, max(12.5, arrowPointsAt + ((+20 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-20 + tsAnnotationOffsetAlternator)))),
                     textcoords='data',
-                    arrowprops=dict(facecolor='black', shrink=0.01, width=0.2, headwidth=4.5),
+                    arrowprops=dict(arrowstyle="->, head_length=0.5, head_width=0.5", connectionstyle="angle,angleA=90,angleB=0"),
                     horizontalalignment='center',
                     verticalalignment='top',
                     fontsize=11,
