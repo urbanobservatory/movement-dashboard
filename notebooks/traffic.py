@@ -26,7 +26,7 @@ dateBaselineEnd = datetime.datetime.strptime('2020-03-15T23:59:59Z', '%Y-%m-%dT%
 plottableTypes = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
 govChartStart = datetime.datetime.strptime('2020-03-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=tzLocal)
 
-def makeRelativeToBaseline(pdInput, maxMissing15Min = 4):  
+def makeRelativeToBaseline(pdInput, maxMissing15Min = 8):  
     pdTrafficAnalysis = pdInput.copy()
     
     pdTrafficAnalysis.insert(0, 'Date', pdTrafficAnalysis.index.to_series().apply(lambda t: t.date()))
@@ -36,12 +36,16 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 4):
     # Take each day with complete data, and calculate a sum of vehicles per day
     # then convert it to an average per day of the week using the median
     # MUST BE 15 MINUTE DATA AS INPUT FOR THIS...
-    pdTrafficDayOfWeekAverage = pdTrafficAnalysis[ : dateBaselineEnd] \
+    pdTrafficDaySum = pdTrafficAnalysis[ : dateBaselineEnd] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=24 * 4 - maxMissing15Min) \
+        .sum(min_count=24 * 4 - maxMissing15Min)
+    pdTrafficDayOfWeekAverage = pdTrafficDaySum \
         .groupby(['Day of week'], as_index=False) \
         .median()
-
+    pdTrafficDayOfWeekCount = pdTrafficDaySum \
+        .groupby(['Day of week'], as_index=False) \
+        .count()
+    
     pdTrafficRecent = pdTrafficAnalysis[govChartStart :] \
         .groupby(['Date', 'Day of week'], as_index=False) \
         .sum(min_count=85)  \
@@ -54,6 +58,7 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 4):
 
     def convertToPercentage(row):
         dayOfWeek = row.name.strftime('%A')
+        dayOfWeekBaselineCount = pdTrafficDayOfWeekCount[pdTrafficDayOfWeekAverage['Day of week'] == dayOfWeek].iloc[:, 1:].values[0]
         dayOfWeekNormal = pdTrafficDayOfWeekAverage[pdTrafficDayOfWeekAverage['Day of week'] == dayOfWeek].iloc[:, 1:].values[0]
         return (row / dayOfWeekNormal * 100)
 
@@ -106,7 +111,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullL
                 arrowMedian = None if len(arrowMedian) <= 0 else arrowMedian[0]
 
                 shiftAttempt = 0
-                while (arrowPointsAt is None or abs(arrowPointsAt - arrowMedian) < 3.5) and shiftAttempt < 5:
+                while (arrowPointsAt is None or arrowMedian is None or abs(arrowPointsAt - arrowMedian) < 3.5) and shiftAttempt < 5:
                     tsAnnotationOffset = tsAnnotationOffset + 1
                     shiftAttempt = shiftAttempt + 1
                     arrowDay = dateToday - pd.Timedelta(days=tsAnnotationOffset)
@@ -138,7 +143,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullL
                     fontsize=14,
                     color=seriesColour
                 )
-                tsAnnotationOffset = tsAnnotationOffset + 3
+                tsAnnotationOffset = tsAnnotationOffset + round((dateToday.date() - govChartStart.date()).days / 10)
 
         else:
             ax.plot(dfTs, color='#909090', alpha=normalLineAlpha, linewidth=0.35)
