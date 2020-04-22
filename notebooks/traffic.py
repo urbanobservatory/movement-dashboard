@@ -11,6 +11,7 @@ import warnings
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.patheffects as pe
+import math
 
 warnings.filterwarnings('ignore')
 
@@ -26,19 +27,26 @@ dateBaselineEnd = datetime.datetime.strptime('2020-03-15T23:59:59Z', '%Y-%m-%dT%
 plottableTypes = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
 govChartStart = datetime.datetime.strptime('2020-03-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=tzLocal)
 
-def makeRelativeToBaseline(pdInput, maxMissing15Min = 8):  
+def makeRelativeToBaseline(pdInput, maxMissing15Min = 8, includeHours=list(range(0, 23))):  
     pdTrafficAnalysis = pdInput.copy()
     
     pdTrafficAnalysis.insert(0, 'Date', pdTrafficAnalysis.index.to_series().apply(lambda t: t.date()))
     pdTrafficAnalysis.insert(0, 'Day of week', pdTrafficAnalysis.index.to_series().apply(lambda t: t.strftime('%A')))
     pdTrafficAnalysis.insert(1, 'Time of day', pdTrafficAnalysis.index.to_series().apply(lambda t: t.strftime('%H:%M:%S')))
+    pdTrafficAnalysis.insert(1, 'Hour of day', pdTrafficAnalysis.index.to_series().apply(lambda t: t.hour))
 
     # Take each day with complete data, and calculate a sum of vehicles per day
     # then convert it to an average per day of the week using the median
     # MUST BE 15 MINUTE DATA AS INPUT FOR THIS...
-    pdTrafficDaySum = pdTrafficAnalysis[ : dateBaselineEnd] \
+    # There are no peak hours on a weekend
+    pdTrafficHoursSelected = pdTrafficAnalysis \
+        [pdTrafficAnalysis['Hour of day'].apply(lambda hour: hour in includeHours) == True] \
+        [pdTrafficAnalysis['Day of week'].apply(lambda day: len(includeHours) >= 20 or day not in ['Saturday', 'Sunday']) == True] \
+        .drop(columns=['Hour of day'])
+    
+    pdTrafficDaySum = pdTrafficHoursSelected[ : dateBaselineEnd] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=24 * 4 - maxMissing15Min)
+        .sum(min_count=math.floor(len(includeHours)/24) * 24 * 4 - maxMissing15Min)
     pdTrafficDayOfWeekAverage = pdTrafficDaySum \
         .groupby(['Day of week'], as_index=False) \
         .median()
@@ -46,9 +54,9 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 8):
         .groupby(['Day of week'], as_index=False) \
         .count()
     
-    pdTrafficRecent = pdTrafficAnalysis[govChartStart :] \
+    pdTrafficRecent = pdTrafficHoursSelected[govChartStart :] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=85)  \
+        .sum(min_count=math.floor(len(includeHours)/24) * 85)  \
         .replace(0, np.nan)
     # Normally minimum 90... (24 * 4 = 96)
 
@@ -70,13 +78,16 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 8):
     
     return pdTrafficRecentRelativePc
 
-def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullLegend = False, normalLineAlpha=0.5):
+def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fullLegend = False, normalLineAlpha=0.5):
     fig, ax = plt.subplots(1,1, figsize=(18,9), constrained_layout=True)
 
     ax.set_xlabel('Date')
     ax.set_ylim([0, 130])
     ax.set_ylabel('Percentage')
 
+    # Median passed can be a single series or a dict of series with different times of the day etc.
+    dfMedianPc = dfMedianPcSet['Median'] if type(dfMedianPcSet) is dict else dfMedianPcSet
+    
     timeLocatorMajor = mdates.AutoDateLocator(minticks=15, maxticks=60)
     conciseZeroFormats = ['', '%Y', '%b', '%d-%b', '%H:%M', '%H:%M']
     conciseOffsetFormats = ['', '%Y', '%b-%Y', '%d-%b-%Y-%b', '%d-%b-%Y', '%d-%b-%Y %H:%M']
@@ -159,7 +170,23 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPc, tsAdditionalDetail, fullL
                 zorder=3
             )
 
-    ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median')
+    if type(dfMedianPcSet) is dict:
+        for name, series in dfMedianPcSet.items():
+            if name == 'Median':
+                ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median', zorder=10)
+            else:
+                if 'Inter' in name:
+                    marker='v'
+                    linestyle='dashed'
+                elif 'Peak' in name:
+                    marker='^'
+                    linestyle='dashdot'
+                else:
+                    marker = 'o'
+                ax.plot(series, color='#233067', linewidth=1, marker=marker, linestyle=linestyle, markersize=8, alpha=0.75, label=name, zorder=5)
+    else:
+        ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median', zorder=10)
+        
     plt.xticks(ha='center')
     plt.legend(loc='upper right')
     
