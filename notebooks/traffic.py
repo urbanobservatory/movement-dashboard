@@ -46,7 +46,7 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 8, includeHours=list(range
     
     pdTrafficDaySum = pdTrafficHoursSelected[ : dateBaselineEnd] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=math.floor(len(includeHours)/24) * 24 * 4 - maxMissing15Min)
+        .sum(min_count=math.floor(len(includeHours)/24 * 24) * 4 - maxMissing15Min)
     pdTrafficDayOfWeekAverage = pdTrafficDaySum \
         .groupby(['Day of week'], as_index=False) \
         .median()
@@ -56,7 +56,7 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 8, includeHours=list(range
     
     pdTrafficRecent = pdTrafficHoursSelected[govChartStart :] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=math.floor(len(includeHours)/24) * 85)  \
+        .sum(min_count=math.floor(len(includeHours)/24 * 85))  \
         .replace(0, np.nan)
     # Normally minimum 90... (24 * 4 = 96)
 
@@ -122,7 +122,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
                 arrowMedian = None if len(arrowMedian) <= 0 else arrowMedian[0]
 
                 shiftAttempt = 0
-                while (arrowPointsAt is None or arrowMedian is None or abs(arrowPointsAt - arrowMedian) < 3.5) and shiftAttempt < 5:
+                while (arrowPointsAt is None or arrowMedian is None or abs(arrowPointsAt - arrowMedian) < 3.5) and shiftAttempt < 15:
                     tsAnnotationOffset = tsAnnotationOffset + 1
                     shiftAttempt = shiftAttempt + 1
                     arrowDay = dateToday - pd.Timedelta(days=tsAnnotationOffset)
@@ -133,28 +133,29 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
 
                 tsAnnotationOffsetAlternator = -tsAnnotationOffsetAlternator
 
-                ax.annotate(tsAdditionalDetail[ts],
-                    xy=(arrowDay, arrowPointsAt),
-                    xycoords='data',
-                    xytext=(arrowDay, max(12.5, arrowPointsAt + ((+20 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-20 + tsAnnotationOffsetAlternator)))),
-                    textcoords='data',
-                    arrowprops=dict(arrowstyle="->, head_length=0.5, head_width=0.5", connectionstyle="angle,angleA=90,angleB=0"),
-                    horizontalalignment='center',
-                    verticalalignment='top',
-                    fontsize=11,
-                    path_effects=[pe.withStroke(linewidth=4, foreground='#ffffffa0')]
-                )
-                ax.annotate('●',
-                    xy=(arrowDay, max(7, arrowPointsAt + ((+25 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-26 + tsAnnotationOffsetAlternator)))),
-                    xycoords='data',
-                    xytext=(arrowDay, max(7, arrowPointsAt + ((+25 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-26 + tsAnnotationOffsetAlternator)))),
-                    textcoords='data',
-                    horizontalalignment='center',
-                    verticalalignment='top',
-                    fontsize=14,
-                    color=seriesColour
-                )
-                tsAnnotationOffset = tsAnnotationOffset + round((dateToday.date() - govChartStart.date()).days / 10)
+                if arrowPointsAt is not None:
+                    ax.annotate(tsAdditionalDetail[ts],
+                        xy=(arrowDay, arrowPointsAt),
+                        xycoords='data',
+                        xytext=(arrowDay, max(12.5, arrowPointsAt + ((+20 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-20 + tsAnnotationOffsetAlternator)))),
+                        textcoords='data',
+                        arrowprops=dict(arrowstyle="->, head_length=0.5, head_width=0.5", connectionstyle="angle,angleA=90,angleB=0"),
+                        horizontalalignment='center',
+                        verticalalignment='top',
+                        fontsize=11,
+                        path_effects=[pe.withStroke(linewidth=4, foreground='#ffffffa0')]
+                    )
+                    ax.annotate('●',
+                        xy=(arrowDay, max(7, arrowPointsAt + ((+25 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-26 + tsAnnotationOffsetAlternator)))),
+                        xycoords='data',
+                        xytext=(arrowDay, max(7, arrowPointsAt + ((+25 + tsAnnotationOffsetAlternator) if arrowPointsAt > arrowMedian else (-26 + tsAnnotationOffsetAlternator)))),
+                        textcoords='data',
+                        horizontalalignment='center',
+                        verticalalignment='top',
+                        fontsize=14,
+                        color=seriesColour
+                    )
+                    tsAnnotationOffset = tsAnnotationOffset + round((dateToday.date() - govChartStart.date()).days / 10)
 
         else:
             ax.plot(dfTs, color='#909090', alpha=normalLineAlpha, linewidth=0.35)
