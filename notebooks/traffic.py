@@ -27,7 +27,15 @@ dateBaselineEnd = datetime.datetime.strptime('2020-03-15T23:59:59Z', '%Y-%m-%dT%
 plottableTypes = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
 govChartStart = datetime.datetime.strptime('2020-03-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=tzLocal)
 
-def makeRelativeToBaseline(pdInput, maxMissing15Min = 8, includeHours=list(range(0, 23))):  
+bankHolidays = [
+    '10-04-2020',
+    '13-04-2020',
+    '08-05-2020',
+    '25-05-2020',
+    '31-08-2020'
+]
+
+def makeRelativeToBaseline(pdInput, maxMissing15Min = 4, includeHours=list(range(0, 23))):  
     pdTrafficAnalysis = pdInput.copy()
     
     pdTrafficAnalysis.insert(0, 'Date', pdTrafficAnalysis.index.to_series().apply(lambda t: t.date()))
@@ -133,7 +141,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
 
                 tsAnnotationOffsetAlternator = -tsAnnotationOffsetAlternator
 
-                if arrowPointsAt is not None:
+                if arrowPointsAt is not None and arrowMedian is not None:
                     ax.annotate(tsAdditionalDetail[ts],
                         xy=(arrowDay, arrowPointsAt),
                         xycoords='data',
@@ -161,13 +169,13 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
             ax.plot(dfTs, color='#909090', alpha=normalLineAlpha, linewidth=0.35)
 
     for date in dfMedianPc.index:
-        if date.strftime('%A') in ['Saturday', 'Sunday']:
+        if date.strftime('%A') in ['Saturday', 'Sunday'] or date.strftime('%d-%m-%Y') in bankHolidays:
             #print(date)
             ax.axvspan(
                 date - pd.Timedelta(days=0.5),
                 date + pd.Timedelta(days=0.5),
                 alpha=0.1,
-                color='#606060',
+                color='#707070',
                 zorder=3
             )
 
