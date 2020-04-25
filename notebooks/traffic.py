@@ -35,7 +35,7 @@ bankHolidays = [
     '31-08-2020'
 ]
 
-def makeRelativeToBaseline(pdInput, maxMissing15Min = 4, includeHours=list(range(0, 23))):  
+def makeRelativeToBaseline(pdInput, maxMissing = 4, includeHours=list(range(0, 23))):  
     pdTrafficAnalysis = pdInput.copy()
     
     pdTrafficAnalysis.insert(0, 'Date', pdTrafficAnalysis.index.to_series().apply(lambda t: t.date()))
@@ -52,9 +52,13 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 4, includeHours=list(range
         [pdTrafficAnalysis['Day of week'].apply(lambda day: len(includeHours) >= 20 or day not in ['Saturday', 'Sunday']) == True] \
         .drop(columns=['Hour of day'])
     
+    # What's the interval?
+    dataInterval = pdTrafficHoursSelected.index.to_series().diff().median().seconds
+    
+    # TODO: Sort this out for non-15 minute data...
     pdTrafficDaySum = pdTrafficHoursSelected[ : dateBaselineEnd] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=math.floor(len(includeHours)/24 * 24) * 4 - maxMissing15Min)
+        .sum(min_count=math.floor(len(includeHours)/24 * 24 * (3600 / dataInterval) - maxMissing / dataInterval))
     pdTrafficDayOfWeekAverage = pdTrafficDaySum \
         .groupby(['Day of week'], as_index=False) \
         .median()
@@ -64,7 +68,7 @@ def makeRelativeToBaseline(pdInput, maxMissing15Min = 4, includeHours=list(range
     
     pdTrafficRecent = pdTrafficHoursSelected[govChartStart :] \
         .groupby(['Date', 'Day of week'], as_index=False) \
-        .sum(min_count=math.floor(len(includeHours)/24 * 85))  \
+        .sum(min_count=math.floor(len(includeHours)/24 * 24 * (3600 / dataInterval) - maxMissing / dataInterval))  \
         .replace(0, np.nan)
     # Normally minimum 90... (24 * 4 = 96)
 
