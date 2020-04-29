@@ -55,6 +55,12 @@
     "type": "html"
   },
   {
+    "id": "traffic-comparison-hull",
+    "title": "Traffic: Comparison to typical profiles (Hull)",
+    "path": "/output/hull-plot-comparison-to-typical-vehicle-flows.html",
+    "type": "html"
+  },
+  {
     "id": "traffic-3wk",
     "title": "Traffic: Vehicle counts during last three weeks (Tyne and Wear)",
     "path": "/output/plot-traffic-volumes-3-weeks.html",
