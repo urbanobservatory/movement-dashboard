@@ -113,7 +113,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     ax.grid(linestyle='--')
 
     tsAnnotationOffset = 1
-    annotationColours = iter(plt.get_cmap('Dark2').colors)
+    annotationColours = iter(plt.get_cmap('Dark2').colors + plt.get_cmap('Set1').colors)
     tsAnnotationOffsetAlternator = -8
 
     for ts in reversed(sorted(list(pdTrafficRecentRelativePc.columns))):
