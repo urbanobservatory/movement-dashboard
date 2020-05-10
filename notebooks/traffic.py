@@ -48,10 +48,10 @@ def makeRelativeToBaseline(pdInput, maxMissing = 4, includeHours=list(range(0, 2
 
     # Take each day with complete data, and calculate a sum of vehicles per day
     # then convert it to an average per day of the week using the median
-    # MUST BE 15 MINUTE DATA AS INPUT FOR THIS...
     # There are no peak hours on a weekend
     pdTrafficHoursSelected = pdTrafficAnalysis \
         [pdTrafficAnalysis['Hour of day'].apply(lambda hour: hour in includeHours) == True] \
+        [pdTrafficAnalysis['Date'].apply(lambda date: len(includeHours) >= 20 or date.strftime('%d-%m-%Y') not in bankHolidays) == True] \
         [pdTrafficAnalysis['Day of week'].apply(lambda day: len(includeHours) >= 20 or day not in ['Saturday', 'Sunday']) == True] \
         .drop(columns=['Hour of day'])
     
@@ -97,8 +97,9 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     fig, ax = plt.subplots(1,1, figsize=(18,9), constrained_layout=True)
 
     ax.set_xlabel('Date')
-    ax.set_ylim([0, 130])
+    ax.set_ylim([0, 120])
     ax.set_ylabel('Percentage')
+    ax.set_yticks(np.arange(0, 120, 10))
 
     # Median passed can be a single series or a dict of series with different times of the day etc.
     dfMedianPc = dfMedianPcSet['Median'] if type(dfMedianPcSet) is dict else dfMedianPcSet
@@ -110,7 +111,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     ax.xaxis.set_major_locator(timeLocatorMajor)
     ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(locator=timeLocatorMajor, zero_formats=conciseZeroFormats, offset_formats=conciseOffsetFormats))
 
-    ax.grid(linestyle='--')
+    ax.grid(axis='y', linestyle='--', alpha=0.5)
 
     tsAnnotationOffset = 1
     annotationColours = iter(plt.get_cmap('Dark2').colors + plt.get_cmap('Set1').colors)
@@ -181,7 +182,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
             ax.axvspan(
                 date - pd.Timedelta(days=0.5),
                 date + pd.Timedelta(days=0.5),
-                alpha=0.1,
+                alpha=0.15 if date.strftime('%A') in ['Saturday', 'Sunday'] else 0.08,
                 color='#707070',
                 zorder=3
             )
@@ -204,7 +205,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
         ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median', zorder=10)
         
     plt.xticks(ha='center')
-    plt.legend(loc='upper right')
+    plt.legend(loc='upper right', ncol=1 if fullLegend == False else 3)
     
     return [plt, fig, ax]
 
