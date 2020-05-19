@@ -194,7 +194,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     if type(dfMedianPcSet) is dict:
         for name, series in dfMedianPcSet.items():
             if name == 'Median':
-                ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median', zorder=10)
+                ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=8, label='Median', zorder=10)
             else:
                 if 'Inter' in name:
                     marker='v'
@@ -204,9 +204,9 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
                     linestyle='dashdot'
                 else:
                     marker = 'o'
-                ax.plot(series, color='#233067', linewidth=1, marker=marker, linestyle=linestyle, markersize=8, alpha=0.75, label=name, zorder=5)
+                ax.plot(series, color='#233067', linewidth=1, marker=marker, linestyle=linestyle, markersize=7, alpha=0.75, label=name, zorder=5)
     else:
-        ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=10, label='Median', zorder=10)
+        ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=8, label='Median', zorder=10)
         
     plt.xticks(ha='center')
     plt.legend(loc='upper right', ncol=1 if fullLegend == False else 3)
