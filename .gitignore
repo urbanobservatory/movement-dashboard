@@ -131,3 +131,6 @@ dmypy.json
 .jupyter/
 .local/
 
+# Passwords and stuff
+secrets.json
+
