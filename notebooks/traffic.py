@@ -320,6 +320,7 @@ def plotDailyProfile(dp, maxChange=0.25, minBaselineDays=90, title=None):
             # Normalise and set some limits on crazy changes (usually comms outages)
             pdWeekNormalised = postCVSingleWeek[postCVSingleWeek['Day of week'] == dayOfWeek]['Total'] / normalisedVolume
             pdWeekNormalised = pdWeekNormalised.mask(abs(pdWeekNormalised.diff(periods=-1)) > maxChange)
+            pdWeekNormalised.mask(pdWeekNormalised > 1.20, inplace=True)
             
             plotLegends.append(ax.plot(
                 pdWeekNormalised,
