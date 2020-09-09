@@ -100,6 +100,8 @@ def makeRelativeToBaseline(pdInput, maxMissing = 4, includeHours=list(range(0, 2
 def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fullLegend = False, normalLineAlpha=0.5):
     fig, ax = plt.subplots(1,1, figsize=(18,9), constrained_layout=True)
 
+    excludeChangesGreaterThan = 35.0
+    
     ax.set_xlabel('Date')
     ax.set_ylim([0, 120])
     ax.set_ylabel('Percentage')
@@ -108,7 +110,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     # Median passed can be a single series or a dict of series with different times of the day etc.
     dfMedianPc = dfMedianPcSet['Median'] if type(dfMedianPcSet) is dict else dfMedianPcSet
     
-    timeLocatorMajor = mdates.AutoDateLocator(minticks=15, maxticks=60)
+    timeLocatorMajor = mdates.AutoDateLocator(minticks=15, maxticks=40)
     conciseZeroFormats = ['', '%Y', '%b', '%d-%b', '%H:%M', '%H:%M']
     conciseOffsetFormats = ['', '%Y', '%b-%Y', '%d-%b-%Y-%b', '%d-%b-%Y', '%d-%b-%Y %H:%M']
     ax.xaxis.set_tick_params(which='major')
@@ -130,7 +132,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
             seriesColour = next(annotationColours)
 
             if fullLegend == True:
-                ax.plot(dfTs, color=seriesColour, alpha=0.8, linewidth=1.5, label=tsAdditionalDetail[ts], zorder=2)
+                ax.plot(dfTs.mask(dfTs.diff().abs() > excludeChangesGreaterThan), color=seriesColour, alpha=0.8, linewidth=1.5, label=tsAdditionalDetail[ts], zorder=2)
             else:
                 ax.plot(dfTs, color=seriesColour, alpha=0.8, linewidth=1.5)
                 
@@ -194,7 +196,7 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
     if type(dfMedianPcSet) is dict:
         for name, series in dfMedianPcSet.items():
             if name == 'Median':
-                ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=8, label='Median', zorder=10)
+                ax.plot(dfMedianPc.mask(dfMedianPc.diff().abs() > excludeChangesGreaterThan), color='#f64a8a', linewidth=2.0, marker='s', markersize=6, label='Median', zorder=10)
             else:
                 if 'Inter' in name:
                     marker='v'
@@ -204,12 +206,12 @@ def plotTraffic(pdTrafficRecentRelativePc, dfMedianPcSet, tsAdditionalDetail, fu
                     linestyle='dashdot'
                 else:
                     marker = 'o'
-                ax.plot(series, color='#233067', linewidth=1, marker=marker, linestyle=linestyle, markersize=7, alpha=0.75, label=name, zorder=5)
+                ax.plot(series, color='#233067', linewidth=1, marker=marker, linestyle=linestyle, markersize=5, alpha=0.75, label=name, zorder=5)
     else:
-        ax.plot(dfMedianPc, color='#f64a8a', linewidth=2.0, marker='s', markersize=8, label='Median', zorder=10)
+        ax.plot(dfMedianPc.mask(dfMedianPc.diff().abs() > excludeChangesGreaterThan), color='#f64a8a', linewidth=2.0, marker='s', markersize=6, label='Median', zorder=10)
         
     plt.xticks(ha='center')
-    plt.legend(loc='upper right', ncol=1 if fullLegend == False else 3)
+    plt.legend(loc='lower right', ncol=1 if fullLegend == False else 3)
     
     return [plt, fig, ax]
 
@@ -274,7 +276,7 @@ def generateDailyProfiles(sourceData, interval = 60 * 8):
         'recent': pdTrafficPostCV
     }
 
-def plotDailyProfile(dp, maxChange=0.25, minBaselineDays=90, title=None):
+def plotDailyProfile(dp, maxChange=0.50, minBaselineDays=90, title=None):
     fig, axs = plt.subplots(
         4, 2,
         figsize = (15, 6 * 4),
