@@ -79,8 +79,8 @@
     "type": "html"
   },
   {
-    "id": "energy_plots",
-    "title": "Normalised Daily Energy data",
+    "id": "tw-energy",
+    "title": "Energy consumption: Tyne and Wear",
     "path": "/output/plot-static-energy-data.html",
     "type": "html"
   }
