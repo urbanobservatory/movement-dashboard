@@ -77,5 +77,11 @@
     "title": "Energy consumption: Newcastle University",
     "path": "/output/plot-energy-readings.html",
     "type": "html"
+  },
+  {
+    "id": "tw-energy",
+    "title": "Energy consumption: Tyne and Wear",
+    "path": "/output/plot-static-energy-data.html",
+    "type": "html"
   }
 ]
