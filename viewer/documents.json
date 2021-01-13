@@ -78,9 +78,9 @@
     "path": "/output/plot-energy-readings.html",
     "type": "html"
   },
-    {
+  {
     "id": "noise-levels",
-    "title": "Noise Levels, Newcastle 2020",
+    "title": "Noise: Summary (Newcastle upon Tyne)",
     "path": "/output/plot-noise-levels.html",
     "type": "html"
   }
