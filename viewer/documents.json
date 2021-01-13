@@ -79,9 +79,10 @@
     "type": "html"
   },
   {
-    "id": "tw-energy",
-    "title": "Energy consumption: Tyne and Wear",
-    "path": "/output/plot-static-energy-data.html",
+    "id": "noise-levels",
+    "title": "Noise: Summary (Newcastle upon Tyne)",
+    "path": "/output/plot-noise-levels.html",
     "type": "html"
   }
+
 ]
